@@ -8,50 +8,32 @@ import java.util.stream.IntStream;
 public class MinimumDominatingSet {
 
     public static Set<Integer> obtain(Graph graph) {
-        // Buscamos si hay un un mds de 1, de 2, de 3, hasta n.
+        Set<Integer> mds = new HashSet<>();
+        Set<Integer> covered = new HashSet<>();
+        while (covered.size() != graph.getSize()) {
+            int maxCoverVertex = 0;
+            int maxCoverage = 0;
+            for (int i = 0; i < graph.getSize(); i++) {
 
-        int sizeOfMDS = 1;
-        Set<Integer> toTest = new HashSet<>();
-        while (true) {
-            if (sizeOfMDS == graph.getSize()) {
-                return IntStream.rangeClosed(0, graph.getSize() - 1)
-                        .boxed()
-                        .collect(Collectors.toSet());
+                int coverage = calculateCoverage(i, graph, covered);
+                if (coverage > maxCoverage) {
+                    maxCoverage = coverage;
+                    maxCoverVertex = i;
+                }
             }
-
-            // sizeOfDMS debería representar la cantidad de fors que anidamos.
-
-            return testSetAddedToEachVertex(graph, toTest);
-
-            sizeOfMDS++;
+            covered.add(maxCoverVertex);
+            covered.addAll(graph.getNeighbours(maxCoverVertex));
+            mds.add(maxCoverVertex);
         }
+
+        return mds;
     }
 
-    private static Set<Integer> testSetAddedToEachVertex(Graph graph, Set<Integer> toTest) {
-        for (int i = 0; i < graph.getSize(); i++) {
-            if (toTest.contains(i))
-                continue;
-
-            toTest.add(i);
-
-            if (itsDominatingSetOfGraph(graph, toTest)) {
-                return toTest;
-            }
-            else {
-                toTest.remove(i);
-            }
-        }
-    }
-
-    private static Set<Integer> testSetAddedToEachVertexWithSize(Graph graph, Set<Integer> toTest, int MDSsize) {
-        // La idea es, itero, si el set tiene el tamaño con el que estamos laburando, entonces lo testeamos, sino, le agregamos un numero.
-    }
-
-    private static boolean itsDominatingSetOfGraph(Graph graph, Set<Integer> set) {
-        Set<Integer> neighbours = new HashSet<>(set);
-        for (Integer v : set) {
-            neighbours.addAll(graph.getNeighbours(v));
-        }
-        return neighbours.size() == graph.getSize();
+    // Dada la covertura actual y dado un vértice, vemos cuánto cubre dicho vértice que no esté cubierto ya.
+    private static int calculateCoverage(int vertex, Graph graph, Set<Integer> covered) {
+        Set<Integer> coverage = new HashSet<>(graph.getNeighbours(vertex));
+        coverage.add(vertex);
+        coverage.removeAll(covered);
+        return coverage.size();
     }
 }
