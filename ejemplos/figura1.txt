@@ -1,0 +1,10 @@
+# Grafo de la Figura 1 del enunciado (vértices numerados desde 0)
+# Primera línea: cantidad de vértices. Después, una arista por línea.
+6
+0 1
+0 4
+1 4
+1 2
+2 3
+3 4
+3 5
