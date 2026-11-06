@@ -133,12 +133,12 @@ public class GraphTests {
         Graph g2 = new Graph(3);
         g1.addEdge(0, 1);
         g2.addEdge(1, 0);
-        assertTrue(g1.compare(g2));
+        assertTrue(g1.hasSameEdgesAs(g2));
     }
 
     @Test
     public void compareDifferentSizeTest() {
-        assertFalse(new Graph(3).compare(new Graph(4)));
+        assertFalse(new Graph(3).hasSameEdgesAs(new Graph(4)));
     }
 
     @Test
@@ -147,7 +147,7 @@ public class GraphTests {
         Graph g2 = new Graph(3);
         g1.addEdge(0, 1);
         g2.addEdge(1, 2);
-        assertFalse(g1.compare(g2));
+        assertFalse(g1.hasSameEdgesAs(g2));
     }
 
     // ---------- Validaciones ----------

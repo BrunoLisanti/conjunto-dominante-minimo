@@ -116,6 +116,39 @@ public class MDSTest {
         assertEquals(Set.of(0), MinimumDominatingSet.obtain(new Graph(1)));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void nullGraphTest() {
+        MinimumDominatingSet.obtain(null);
+    }
+
+    @Test
+    public void singleEdgeTest() {
+        Graph graph = new Graph(2);
+        graph.addEdge(0, 1);
+        assertEquals(1, MinimumDominatingSet.obtain(graph).size());
+    }
+
+    @Test
+    public void graphIsNotModifiedTest() {
+        Graph graph = figura1();
+        MinimumDominatingSet.obtain(graph);
+        assertTrue(graph.hasSameEdgesAs(figura1()));
+    }
+
+    // ---------- Límite del algoritmo goloso ----------
+
+    // El goloso elige primero el vértice 0 (cubre 8) y termina con 3 vértices,
+    // pero {1, 2} ya es un conjunto dominante: la heurística no siempre da el mínimo.
+    @Test
+    public void greedyTrapHasDominatingSetOfSizeTwoTest() {
+        assertTrue(isDominating(greedyTrap(), Set.of(1, 2)));
+    }
+
+    @Test
+    public void greedyIsNotAlwaysOptimalTest() {
+        assertEquals(3, MinimumDominatingSet.obtain(greedyTrap()).size());
+    }
+
     // ---------- Grafos aleatorios ----------
 
     @Test
@@ -157,6 +190,15 @@ public class MDSTest {
         Graph graph = new Graph(4);
         graph.addEdge(0, 1);
         graph.addEdge(2, 3);
+        return graph;
+    }
+
+    // 0 es vecino de 1 y de casi todas las hojas; 1 y 2 juntos dominan todo.
+    private static Graph greedyTrap() {
+        Graph graph = new Graph(11);
+        for (int vertex : new int[] {1, 3, 4, 5, 7, 8, 9}) graph.addEdge(0, vertex);
+        for (int vertex : new int[] {3, 4, 5, 6}) graph.addEdge(1, vertex);
+        for (int vertex : new int[] {7, 8, 9, 10}) graph.addEdge(2, vertex);
         return graph;
     }
 

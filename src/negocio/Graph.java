@@ -73,14 +73,14 @@ public class Graph {
         return count;
     }
 
-    public boolean compare(Graph graph) {
-        if (this.getSize() != graph.getSize())
+    public boolean hasSameEdgesAs(Graph graph) {
+        if (getSize() != graph.getSize())
             return false;
 
-        int vertices = adjacencyMatrix.length;
+        int vertices = getSize();
         for (int i = 0; i < vertices; i++) {
             for (int j = i + 1; j < vertices; j++) {
-                if (adjacencyMatrix[i][j] != graph.edgeExists(i, j)) {
+                if (edgeExists(i, j) != graph.edgeExists(i, j)) {
                     return false;
                 }
             }
